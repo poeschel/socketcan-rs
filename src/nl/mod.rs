@@ -1014,4 +1014,79 @@ pub mod tests {
         assert!(interface.set_mtu(Mtu::Standard).is_ok());
         assert_eq!(Mtu::Standard, interface.details().unwrap().mtu.unwrap());
     }
+
+    #[test]
+    #[serial]
+    fn set_can_parameters() {
+        let interface = TemporaryInterface::new("set_can_parms").unwrap();
+        let mut params = InterfaceCanParams::default();
+        params.bit_timing_const = Some(CanBitTimingConst::default());
+        assert!(matches!(interface.set_can_params(&params), Err(NlError::Msg(_m))));
+
+        let mut params = InterfaceCanParams::default();
+        params.clock = Some(CanClock{ freq: 1 });
+        assert!(matches!(interface.set_can_params(&params), Err(NlError::Msg(_m))));
+
+        let mut params = InterfaceCanParams::default();
+        params.state = Some(CanState::ErrorActive);
+        assert!(matches!(interface.set_can_params(&params), Err(NlError::Msg(_m))));
+
+        let mut params = InterfaceCanParams::default();
+        params.berr_counter = Some(CanBerrCounter{ txerr: 0, rxerr: 0});
+        assert!(matches!(interface.set_can_params(&params), Err(NlError::Msg(_m))));
+
+        let mut params = InterfaceCanParams::default();
+        params.data_bit_timing_const = Some(CanBitTimingConst::default());
+        assert!(matches!(interface.set_can_params(&params), Err(NlError::Msg(_m))));
+
+        // setting bitrate to 125000
+        let interface = CanInterface::open("can0").unwrap();
+        let params = InterfaceCanParams{
+            bit_timing: Some(CanBitTiming{
+                bitrate: 125000,
+                ..CanBitTiming::default()
+            }),
+            ..InterfaceCanParams::default()
+        };
+        let _res = interface.set_can_params(&params);
+        let read_params = interface.details().unwrap().can;
+        println!("params:{:?}", params);
+        println!("read  :{:?}", read_params);
+        assert_eq!(params.bit_timing.unwrap().bitrate, read_params.bit_timing.unwrap().bitrate);
+
+        // setting bitrate to 500000
+        let params = InterfaceCanParams{
+            bit_timing: Some(CanBitTiming{
+                bitrate: 500000,
+                ..CanBitTiming::default()
+            }),
+            ..InterfaceCanParams::default()
+        };
+        let _res = interface.set_can_params(&params);
+        let read_params = interface.details().unwrap().can;
+        println!("params:{:?}", params);
+        println!("read  :{:?}", read_params);
+        assert_eq!(params.bit_timing.unwrap().bitrate, read_params.bit_timing.unwrap().bitrate);
+
+        // setting can fd mode to on with databitrate 2000000
+        let params = InterfaceCanParams{
+            bit_timing: Some(CanBitTiming{
+                bitrate: 500000,
+                ..CanBitTiming::default()
+            }),
+            ctrl_mode: Some(CanCtrlModes::from_mode(CanCtrlMode::Fd, true)),
+            data_bit_timing: Some(CanBitTiming{
+                bitrate: 2000000,
+                ..CanBitTiming::default()
+            }),
+            ..InterfaceCanParams::default()
+        };
+        let res = interface.set_can_params(&params);
+        println!("");
+        println!("res:{:?}", res);
+        let read_params = interface.details().unwrap().can;
+        println!("params:{:?}", params);
+        println!("read  :{:?}", read_params);
+        assert_eq!(params.ctrl_mode.unwrap().0.flags, read_params.ctrl_mode.unwrap().0.flags);
+    }
 }
