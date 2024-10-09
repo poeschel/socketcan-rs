@@ -17,11 +17,11 @@ use crate::{
     id::CAN_ERR_MASK,
     CanAnyFrame, CanFdFrame, CanFrame, CanRawFrame, Error, IoError, IoErrorKind, IoResult, Result,
 };
+use core::ptr::from_ref;
 pub use embedded_can::{
     self, blocking::Can as BlockingCan, nb::Can as NonBlockingCan, ExtendedId,
     Frame as EmbeddedFrame, Id, StandardId,
 };
-use core::ptr::from_ref;
 use libc::{canid_t, socklen_t, AF_CAN, EINPROGRESS};
 use nix::cmsg_space;
 use nix::sys::socket::{
