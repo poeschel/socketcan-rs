@@ -295,6 +295,12 @@ pub enum CanCtrlMode {
     NonIso,
     /// Classic CAN DLC option
     CcLen8Dlc,
+    /// CAN transiver automatically calculates TDCV
+    TDC_AUTO,
+    /// TDCV is manually set up by user
+    TDC_MANUAL,
+    /// LIN mode
+    Lin,
 }
 
 impl CanCtrlMode {
