@@ -296,9 +296,9 @@ pub enum CanCtrlMode {
     /// Classic CAN DLC option
     CcLen8Dlc,
     /// CAN transiver automatically calculates TDCV
-    TDC_AUTO,
+    TdcAuto,
     /// TDCV is manually set up by user
-    TDC_MANUAL,
+    TdcManual,
     /// LIN mode
     Lin,
 }
