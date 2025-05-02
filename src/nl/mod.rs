@@ -301,6 +301,16 @@ pub enum CanCtrlMode {
     TdcManual,
     /// LIN mode
     Lin,
+    /// acknowledge forbidden mode
+    AckForbidden,
+    /// self ack
+    SelfAck,
+    /// to receive a frame, a valid ack is not required
+    NoAckRequired,
+    /// does send ack, but no error or overflow frame
+    RestrictedOperation,
+    /// put error frames into the receive queue
+    ReceiveErrorFrames,
 }
 
 impl CanCtrlMode {
