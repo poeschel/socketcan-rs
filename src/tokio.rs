@@ -27,7 +27,8 @@
 //! }
 //! ```
 use crate::{
-    frame::AsPtr, CanAddr, CanAnyFrame, CanFrame, Error, IoResult, Result, Socket, SocketOptions,
+    frame::AsPtr, socket::TimestampingMode, CanAddr, CanAnyFrame, CanFdFrame, CanFrame, Error,
+    IoResult, Result, Socket, SocketOptions,
 };
 use futures::{prelude::*, ready, task::Context};
 use std::{
